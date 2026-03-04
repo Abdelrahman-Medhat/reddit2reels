@@ -5,455 +5,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reddit-to-Reels Studio — Offer</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      --orange: #ff4500;
+      --orange2: #ff8c00;
+      --bg: #0a0a0f;
+      --card: #13131a;
+      --border: #1e1e2e;
+    }
+
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: #0a0a0f;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
       color: #e2e8f0;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* Hero */
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 100px 24px 80px;
-      text-align: center;
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #2a2a3e; border-radius: 3px; }
+
+    /* ── Keyframes ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-10px); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,69,0,0.2); }
+      50%       { box-shadow: 0 0 50px rgba(255,69,0,0.45); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes rotateLogo {
+      0%   { transform: rotate(0deg) scale(1); }
+      50%  { transform: rotate(3deg) scale(1.05); }
+      100% { transform: rotate(0deg) scale(1); }
+    }
+    @keyframes borderPulse {
+      0%, 100% { border-color: rgba(255,69,0,0.3); }
+      50%       { border-color: rgba(255,69,0,0.7); }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes orb1 {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      33%       { transform: translate(60px,-40px) scale(1.1); }
+      66%       { transform: translate(-40px,30px) scale(0.9); }
+    }
+    @keyframes orb2 {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      33%       { transform: translate(-50px,60px) scale(0.95); }
+      66%       { transform: translate(70px,-30px) scale(1.05); }
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes upvotePop {
+      0%  { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100%{ transform: scale(1); }
+    }
+    @keyframes particleFloat {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-120px) rotate(360deg); opacity: 0; }
+    }
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -200px; left: 50%;
-      transform: translateX(-50%);
-      width: 800px; height: 600px;
-      background: radial-gradient(ellipse, rgba(255,69,0,0.15) 0%, transparent 70%);
+    /* ── Particles canvas ── */
+    #particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
     }
 
-    .badge {
-      display: inline-block;
-      background: rgba(255,69,0,0.15);
-      border: 1px solid rgba(255,69,0,0.3);
-      color: #ff6534;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 6px 16px;
-      border-radius: 100px;
-      margin-bottom: 28px;
-    }
-
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 68px);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -1.5px;
-      margin-bottom: 20px;
-    }
-
-    .hero h1 span {
-      background: linear-gradient(135deg, #ff4500, #ff8c00);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero p {
-      font-size: 18px;
-      color: #94a3b8;
-      max-width: 560px;
-      margin: 0 auto 48px;
-      line-height: 1.7;
-    }
-
-    .hero-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, #ff4500, #ff8c00);
-      color: white;
-      font-weight: 700;
-      font-size: 16px;
-      padding: 14px 32px;
-      border-radius: 12px;
-      text-decoration: none;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-
-    .hero-cta:hover { opacity: 0.9; transform: translateY(-2px); }
-
-    /* Section */
-    section {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
-
-    .section-label {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #ff6534;
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-size: clamp(24px, 4vw, 38px);
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 12px;
-    }
-
-    .section-sub {
-      color: #64748b;
-      font-size: 16px;
-      margin-bottom: 48px;
-      max-width: 500px;
-    }
-
-    /* Features grid */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-
-    .feature-card {
-      background: #13131a;
-      border: 1px solid #1e1e2e;
-      border-radius: 16px;
-      padding: 28px;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-
-    .feature-card:hover {
-      border-color: rgba(255,69,0,0.3);
-      transform: translateY(-3px);
-    }
-
-    .feature-icon {
-      font-size: 28px;
-      margin-bottom: 16px;
-    }
-
-    .feature-card h3 {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #f1f5f9;
-    }
-
-    .feature-card p {
-      font-size: 14px;
-      color: #64748b;
-      line-height: 1.6;
-    }
-
-    /* Video demo mockup */
-    .demo-mockup {
-      background: #13131a;
-      border: 1px solid #1e1e2e;
-      border-radius: 20px;
-      padding: 32px;
-      margin-bottom: 80px;
-      display: flex;
-      gap: 32px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .mockup-screen {
-      flex: 1;
-      min-width: 260px;
-      background: #0a0a0f;
-      border-radius: 12px;
-      border: 1px solid #1e1e2e;
-      aspect-ratio: 9/16;
-      max-height: 300px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 20px;
-    }
-
-    .mockup-bg {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    }
-
-    .mockup-overlay {
-      position: relative;
-      z-index: 2;
-      background: white;
-      border-radius: 12px;
-      padding: 12px 14px;
-      width: 85%;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-    }
-
-    .reddit-header {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-
-    .reddit-dot {
-      width: 18px; height: 18px;
-      background: #ff4500;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; color: white; font-weight: 900;
-    }
-
-    .reddit-sub {
-      font-size: 9px;
-      font-weight: 700;
-      color: #1c1c1c;
-    }
-
-    .reddit-user {
-      font-size: 8px;
-      color: #666;
-    }
-
-    .reddit-text {
-      font-size: 9px;
-      color: #1c1c1c;
-      font-weight: 600;
-      line-height: 1.4;
-    }
-
-    .reddit-upvotes {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 6px;
-      font-size: 8px;
-      color: #ff4500;
-      font-weight: 700;
-    }
-
-    .mockup-info {
-      flex: 1.5;
-      min-width: 240px;
-    }
-
-    .mockup-info h3 {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-
-    .mockup-steps {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .mockup-steps li {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      font-size: 14px;
-      color: #94a3b8;
-    }
-
-    .step-num {
-      background: rgba(255,69,0,0.15);
-      color: #ff6534;
-      font-size: 11px;
-      font-weight: 800;
-      width: 22px; height: 22px;
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    /* Pricing */
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      align-items: start;
-    }
-
-    .pricing-card {
-      background: #13131a;
-      border: 1px solid #1e1e2e;
-      border-radius: 20px;
-      padding: 32px;
-      position: relative;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-
-    .pricing-card:hover {
-      border-color: rgba(255,69,0,0.25);
-      transform: translateY(-4px);
-    }
-
-    .pricing-card.featured {
-      border-color: rgba(255,69,0,0.5);
-      background: linear-gradient(160deg, #1a1010, #13131a);
-    }
-
-    .pricing-card.featured::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(255,69,0,0.4), transparent 60%);
-      z-index: -1;
-    }
-
-    .plan-tag {
-      display: inline-block;
-      background: linear-gradient(135deg, #ff4500, #ff8c00);
-      color: white;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 100px;
-      margin-bottom: 20px;
-    }
-
-    .plan-name {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .plan-desc {
-      font-size: 13px;
-      color: #64748b;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
-
-    .plan-price {
-      margin-bottom: 28px;
-    }
-
-    .plan-price .amount {
-      font-size: 48px;
-      font-weight: 900;
-      letter-spacing: -2px;
-      line-height: 1;
-      background: linear-gradient(135deg, #f1f5f9, #94a3b8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .pricing-card.featured .plan-price .amount {
-      background: linear-gradient(135deg, #ff6534, #ff8c00);
-      -webkit-background-clip: text;
-      background-clip: text;
-    }
-
-    .plan-price .period {
-      font-size: 14px;
-      color: #64748b;
-      margin-left: 4px;
-    }
-
-    .plan-features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 32px;
-    }
-
-    .plan-features li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 14px;
-      color: #94a3b8;
-      line-height: 1.5;
-    }
-
-    .check {
-      color: #ff4500;
-      font-size: 14px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .plan-btn {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 700;
-      text-align: center;
-      cursor: pointer;
-      border: none;
-      transition: opacity 0.2s, transform 0.2s;
-      text-decoration: none;
-    }
-
-    .plan-btn:hover { opacity: 0.85; transform: translateY(-1px); }
-
-    .plan-btn.primary {
-      background: linear-gradient(135deg, #ff4500, #ff8c00);
-      color: white;
-    }
-
-    .plan-btn.secondary {
-      background: #1e1e2e;
-      color: #e2e8f0;
-      border: 1px solid #2a2a3e;
-    }
-
-    /* Delivery */
-    .delivery-bar {
-      background: #13131a;
-      border: 1px solid #1e1e2e;
-      border-radius: 16px;
-      padding: 28px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-      margin-top: 48px;
-    }
-
-    .delivery-bar .label {
-      font-size: 13px;
-      color: #64748b;
-      margin-bottom: 4px;
-    }
-
-    .delivery-bar .value {
-      font-size: 20px;
-      font-weight: 800;
-    }
-
-    .delivery-bar .value span {
-      color: #ff6534;
-    }
-
-    /* Company header */
+    /* ── Company Header ── */
     .company-header {
-      background: #0d0d14;
-      border-bottom: 1px solid #1e1e2e;
-      padding: 20px 24px;
+      position: relative;
+      z-index: 10;
+      background: rgba(13,13,20,0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 24px;
+      backdrop-filter: blur(12px);
+      animation: fadeIn 0.6s ease both;
     }
 
     .company-inner {
@@ -473,12 +132,13 @@
     }
 
     .company-logo {
-      width: 42px; height: 42px;
-      background: linear-gradient(135deg, #ff4500, #ff8c00);
-      border-radius: 10px;
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--orange), var(--orange2));
+      border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px; font-weight: 900; color: white;
-      letter-spacing: -1px;
+      font-size: 20px; font-weight: 900; color: white;
+      animation: rotateLogo 4s ease-in-out infinite;
+      box-shadow: 0 4px 20px rgba(255,69,0,0.35);
     }
 
     .company-name {
@@ -487,16 +147,18 @@
       color: #f1f5f9;
       letter-spacing: -0.3px;
     }
-
-    .company-name span {
-      color: #ff6534;
-    }
+    .company-name span { color: #ff6534; }
 
     .company-tagline {
       font-size: 11px;
       color: #475569;
       margin-top: 2px;
-      letter-spacing: 0.5px;
+    }
+
+    .company-address-line {
+      font-size: 10px;
+      color: #334155;
+      margin-top: 1px;
     }
 
     .company-meta {
@@ -505,9 +167,7 @@
       flex-wrap: wrap;
     }
 
-    .meta-item {
-      text-align: right;
-    }
+    .meta-item { text-align: right; }
 
     .meta-label {
       font-size: 10px;
@@ -523,12 +183,15 @@
       font-weight: 600;
     }
 
-    /* Trust bar */
+    /* ── Trust Bar ── */
     .trust-bar {
-      background: rgba(255,69,0,0.04);
-      border-bottom: 1px solid rgba(255,69,0,0.1);
-      padding: 12px 24px;
+      position: relative;
+      z-index: 10;
+      background: rgba(255,69,0,0.05);
+      border-bottom: 1px solid rgba(255,69,0,0.12);
+      padding: 11px 24px;
       text-align: center;
+      animation: fadeIn 0.8s 0.2s ease both;
     }
 
     .trust-bar p {
@@ -538,291 +201,938 @@
       margin: 0 auto;
     }
 
-    .trust-bar p strong {
-      color: #94a3b8;
+    .trust-bar p strong { color: #94a3b8; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      padding: 110px 24px 90px;
+      text-align: center;
     }
 
-    .trust-bar p a {
+    .hero-orb1, .hero-orb2 {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .hero-orb1 {
+      width: 500px; height: 500px;
+      background: rgba(255,69,0,0.12);
+      top: -100px; left: -100px;
+      animation: orb1 12s ease-in-out infinite;
+    }
+
+    .hero-orb2 {
+      width: 400px; height: 400px;
+      background: rgba(255,140,0,0.08);
+      bottom: -80px; right: -80px;
+      animation: orb2 15s ease-in-out infinite;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,69,0,0.12);
+      border: 1px solid rgba(255,69,0,0.3);
       color: #ff6534;
-      text-decoration: none;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+      animation: fadeUp 0.7s 0.3s ease both, borderPulse 3s 1s ease-in-out infinite;
     }
 
-    /* Mercury badge */
-    .mercury-note {
-      background: #13131a;
-      border: 1px solid #1e1e2e;
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: #ff4500;
+      border-radius: 50%;
+      animation: upvotePop 1.5s ease-in-out infinite;
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 6vw, 72px);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -2px;
+      margin-bottom: 22px;
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, #ff4500, #ff8c00, #ffb700, #ff4500);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 4s ease infinite;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #94a3b8;
+      max-width: 540px;
+      margin: 0 auto 52px;
+      line-height: 1.75;
+      animation: fadeUp 0.7s 0.5s ease both;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--orange), var(--orange2));
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+      padding: 16px 36px;
       border-radius: 14px;
-      padding: 20px 24px;
-      margin-top: 24px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: fadeUp 0.7s 0.6s ease both, pulseGlow 3s 1s ease-in-out infinite;
+      box-shadow: 0 4px 24px rgba(255,69,0,0.3);
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 8px 40px rgba(255,69,0,0.5);
+    }
+
+    .hero-cta .arrow {
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+
+    .hero-cta:hover .arrow { transform: translateX(4px); }
+
+    /* ── Section ── */
+    section {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px 90px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #ff6534;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 900;
+      letter-spacing: -0.8px;
+      margin-bottom: 12px;
+    }
+
+    .section-sub {
+      color: #64748b;
+      font-size: 16px;
+      margin-bottom: 52px;
+      max-width: 480px;
+    }
+
+    /* ── Reveal on scroll ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Features ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      cursor: default;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(255,69,0,0.4);
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(255,69,0,0.1);
+    }
+
+    .feature-icon {
+      font-size: 30px;
+      margin-bottom: 16px;
+      display: inline-block;
+      transition: transform 0.3s;
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.2) rotate(-5deg);
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #f1f5f9;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.65;
+    }
+
+    /* ── Mockup ── */
+    .demo-mockup {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 36px;
+      margin-bottom: 90px;
+      display: flex;
+      gap: 36px;
+      align-items: center;
+      flex-wrap: wrap;
+      transition: box-shadow 0.3s;
+    }
+
+    .demo-mockup:hover {
+      box-shadow: 0 20px 60px rgba(255,69,0,0.07);
+    }
+
+    .mockup-screen {
+      flex: 1;
+      min-width: 160px;
+      max-width: 175px;
+      background: #0a0a0f;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      aspect-ratio: 9/16;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 18px;
+      animation: floatY 4s ease-in-out infinite;
+    }
+
+    .mockup-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+
+    /* Scanline effect */
+    .mockup-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.015) 2px,
+        rgba(255,255,255,0.015) 4px
+      );
+    }
+
+    .mockup-overlay {
+      position: relative;
+      z-index: 2;
+      background: white;
+      border-radius: 10px;
+      padding: 10px 12px;
+      width: 88%;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      animation: floatY 4s 0.5s ease-in-out infinite;
+    }
+
+    .reddit-header {
       display: flex;
       align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 5px;
     }
 
-    .mercury-icon {
-      width: 36px; height: 36px;
-      background: linear-gradient(135deg, #0ea5e9, #6366f1);
-      border-radius: 8px;
+    .reddit-dot {
+      width: 16px; height: 16px;
+      background: #ff4500;
+      border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
+      font-size: 9px; color: white; font-weight: 900;
+    }
+
+    .reddit-sub { font-size: 8px; font-weight: 700; color: #1c1c1c; }
+    .reddit-user { font-size: 7px; color: #888; }
+
+    .reddit-text {
+      font-size: 8px;
+      color: #1c1c1c;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .reddit-upvotes {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 5px;
+      font-size: 7px;
+      color: #ff4500;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .reddit-upvotes:hover { animation: upvotePop 0.3s ease; }
+
+    .mockup-info { flex: 1.6; min-width: 240px; }
+
+    .mockup-info h3 {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .mockup-steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mockup-steps li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+      color: #94a3b8;
+      opacity: 0;
+      animation: slideIn 0.5s ease both;
+    }
+
+    .mockup-steps li:nth-child(1) { animation-delay: 0.1s; }
+    .mockup-steps li:nth-child(2) { animation-delay: 0.25s; }
+    .mockup-steps li:nth-child(3) { animation-delay: 0.4s; }
+    .mockup-steps li:nth-child(4) { animation-delay: 0.55s; }
+    .mockup-steps li:nth-child(5) { animation-delay: 0.7s; }
+
+    .step-num {
+      background: rgba(255,69,0,0.15);
+      color: #ff6534;
+      font-size: 11px;
+      font-weight: 800;
+      width: 24px; height: 24px;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .mockup-steps li:hover .step-num {
+      background: rgba(255,69,0,0.3);
+      color: #ff4500;
+    }
+
+    /* ── Pricing ── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .pricing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 34px;
+      position: relative;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+
+    .pricing-card:hover {
+      border-color: rgba(255,69,0,0.3);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    .pricing-card.featured {
+      border-color: rgba(255,69,0,0.55);
+      background: linear-gradient(160deg, #1c1010, #13131a);
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+
+    .pricing-card.featured::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(255,69,0,0.35), transparent 55%);
+      z-index: -1;
+    }
+
+    .plan-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--orange), var(--orange2));
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+    }
+
+    .plan-name {
+      font-size: 21px;
+      font-weight: 900;
+      margin-bottom: 7px;
+      letter-spacing: -0.3px;
+    }
+
+    .plan-desc {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 26px;
+      line-height: 1.55;
+    }
+
+    .plan-price { margin-bottom: 28px; }
+
+    .plan-price .amount {
+      font-size: 52px;
+      font-weight: 900;
+      letter-spacing: -3px;
+      line-height: 1;
+      background: linear-gradient(135deg, #f1f5f9, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: countUp 0.5s ease both;
+    }
+
+    .pricing-card.featured .plan-price .amount {
+      background: linear-gradient(135deg, #ff6534, #ff8c00, #ffb700);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: gradientShift 3s ease infinite;
+    }
+
+    .plan-price .period {
+      font-size: 14px;
+      color: #64748b;
+      margin-left: 4px;
+    }
+
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin-bottom: 34px;
+    }
+
+    .plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #94a3b8;
+      line-height: 1.5;
+      transition: color 0.2s;
+    }
+
+    .plan-features li:hover { color: #cbd5e1; }
+
+    .check {
+      color: #ff4500;
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: transform 0.2s;
+    }
+
+    .plan-features li:hover .check { transform: scale(1.3); }
+
+    .plan-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      border-radius: 13px;
+      font-size: 15px;
+      font-weight: 800;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      text-decoration: none;
+      letter-spacing: 0.2px;
+    }
+
+    .plan-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    .plan-btn.primary {
+      background: linear-gradient(135deg, var(--orange), var(--orange2));
+      color: white;
+      box-shadow: 0 4px 20px rgba(255,69,0,0.3);
+    }
+
+    .plan-btn.primary:hover {
+      box-shadow: 0 8px 32px rgba(255,69,0,0.5);
+    }
+
+    .plan-btn.secondary {
+      background: #1e1e2e;
+      color: #e2e8f0;
+      border: 1px solid #2a2a3e;
+    }
+
+    /* ── Mercury ── */
+    .mercury-note {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 26px;
+      margin-top: 26px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      transition: border-color 0.25s;
+    }
+
+    .mercury-note:hover { border-color: rgba(14,165,233,0.3); }
+
+    .mercury-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(14,165,233,0.25);
     }
 
     .mercury-text strong {
       display: block;
       font-size: 14px;
       color: #f1f5f9;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
 
     .mercury-text p {
       font-size: 13px;
       color: #64748b;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
-    /* Footer */
+    /* ── Delivery bar ── */
+    .delivery-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .delivery-bar .label {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    .delivery-bar .value {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .delivery-bar .value span { color: #ff6534; }
+
+    /* ── Footer ── */
     footer {
-      border-top: 1px solid #1e1e2e;
-      padding: 40px 24px 48px;
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 44px 24px 52px;
       text-align: center;
     }
 
-    .footer-inner {
-      max-width: 960px;
-      margin: 0 auto;
+    .footer-inner { max-width: 960px; margin: 0 auto; }
+
+    .footer-logo {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--orange), var(--orange2));
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 900; color: white;
+      margin: 0 auto 14px;
     }
 
     .footer-company {
-      font-size: 15px;
-      font-weight: 700;
+      font-size: 16px;
+      font-weight: 800;
       color: #f1f5f9;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
-
     .footer-company span { color: #ff6534; }
 
     .footer-address {
       font-size: 13px;
       color: #475569;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
 
     .footer-reg {
       font-size: 12px;
-      color: #334155;
+      color: #2d3748;
+    }
+
+    /* ── Divider ── */
+    .section-divider {
+      max-width: 960px;
+      margin: 0 auto 80px;
+      padding: 0 24px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
     }
   </style>
 </head>
 <body>
 
-  <!-- Company Header -->
-  <div class="company-header">
-    <div class="company-inner">
-      <div class="company-brand">
-        <div class="company-logo">G</div>
-        <div>
-          <div class="company-name">Growmetry<span>, LLC</span></div>
-          <div class="company-tagline">E-Commerce · Sheridan, Wyoming, USA</div>
-        </div>
+<canvas id="particles"></canvas>
+
+<!-- Company Header -->
+<div class="company-header">
+  <div class="company-inner">
+    <div class="company-brand">
+      <div class="company-logo">G</div>
+      <div>
+        <div class="company-name">Growmetry<span>, LLC</span></div>
+        <div class="company-tagline">E-Commerce · Sheridan, Wyoming, USA</div>
+        <div class="company-address-line">30 N Gould St, Ste R, Sheridan, WY 82801, United States</div>
       </div>
-      <div class="company-meta">
-        <div class="meta-item">
-          <div class="meta-label">Owner</div>
-          <div class="meta-value">Abdelrahman Ahmed</div>
-        </div>
-        <div class="meta-item">
-          <div class="meta-label">Formation</div>
-          <div class="meta-value">March 3, 2026</div>
-        </div>
-        <div class="meta-item">
-          <div class="meta-label">Reg. No.</div>
-          <div class="meta-value">#133321</div>
-        </div>
+    </div>
+    <div class="company-meta">
+      <div class="meta-item">
+        <div class="meta-label">Owner</div>
+        <div class="meta-value">Abdelrahman Ahmed</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Formation</div>
+        <div class="meta-value">March 3, 2026</div>
+      </div>
+
+      <div class="meta-item">
+        <div class="meta-label">Filing ID</div>
+        <div class="meta-value">2026-001908151</div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Trust Bar -->
-  <div class="trust-bar">
-    <p>This offer is issued by <strong>Growmetry, LLC</strong> — a registered US company (Wyoming #133321). Your payment is secured through a <strong>Mercury business bank account</strong>. No crypto, no sketchy transfers.</p>
-  </div>
+<!-- Trust Bar -->
+<div class="trust-bar">
+  <p>This offer is issued by <strong>Growmetry, LLC</strong> — a registered US company (Wyoming · Filing ID: 2026-001908151). <a href="https://wyobiz.wyo.gov/business/FilingDetails.aspx?eFNum=208154227136168070204178062219040200156114012101" target="_blank" rel="noopener" style="color:#ff6534;font-weight:700;text-decoration:none;">Verify on Wyoming State Portal →</a> · Your payment is secured through a <strong>Mercury business bank account</strong>. No crypto, no sketchy transfers.</p>
+</div>
 
-  <!-- Hero -->
-  <div class="hero">
-    <div class="badge">Custom Web App — 7 Day Delivery</div>
-    <h1>Your Own <span>Reddit-to-Reels</span><br>Production Studio</h1>
-    <p>Drop a video, a transcription, and a Reddit post. Get a viral-ready short-form video out. No editing. No manual work. Under 2 minutes.</p>
-    <a href="#pricing" class="hero-cta">See Pricing →</a>
-  </div>
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-orb1"></div>
+  <div class="hero-orb2"></div>
+  <div class="badge"><span class="badge-dot"></span>Custom Web App — 7 Day Delivery</div>
+  <h1>Your Own <span class="gradient-text">Reddit-to-Reels</span><br>Production Studio</h1>
+  <p>Drop a video, a transcription, and a Reddit post. Get a viral-ready short-form video out. No editing. No manual work. Under 2 minutes.</p>
+  <a href="#pricing" class="hero-cta">See Pricing <span class="arrow">→</span></a>
+</div>
 
-  <!-- Features -->
-  <section>
-    <div class="section-label">What You Get</div>
-    <h2 class="section-title">Everything built in.</h2>
-    <p class="section-sub">A complete automated content workflow, not just a script.</p>
+<!-- Features -->
+<section>
+  <div class="section-label reveal">What You Get</div>
+  <h2 class="section-title reveal">Everything built in.</h2>
+  <p class="section-sub reveal">A complete automated content workflow, not just a script.</p>
 
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🎮</div>
-        <h3>Background Video Processing</h3>
-        <p>Upload any gameplay or lifestyle footage. Auto-cropped to 9:16 vertical format, ready for Shorts, TikTok, and Reels.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">💬</div>
-        <h3>Animated Reddit Overlay</h3>
-        <p>Authentic floating Reddit post card — subreddit, username, upvotes, the full look — rendered directly on your video.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🎙️</div>
-        <h3>AI Voiceover</h3>
-        <p>Natural-sounding AI voice reads the post aloud, automatically synced to the length of your video.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">✨</div>
-        <h3>AI Post Generator</h3>
-        <p>Toggle it on — the AI writes the Reddit post for you based on your transcription. Zero copy-pasting required.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <h3>One-Click Export</h3>
-        <p>Hit export. Download your finished video, ready to post — no rendering wait, no manual compositing.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🗂️</div>
-        <h3>Video History</h3>
-        <p>Every export is saved in your dashboard. Re-download, duplicate, or edit any past video at any time.</p>
-      </div>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">🎮</div>
+      <h3>Background Video Processing</h3>
+      <p>Upload any gameplay or lifestyle footage. Auto-cropped to 9:16 vertical format, ready for Shorts, TikTok, and Reels.</p>
     </div>
-  </section>
+    <div class="feature-card reveal">
+      <div class="feature-icon">💬</div>
+      <h3>Animated Reddit Overlay</h3>
+      <p>Authentic floating Reddit post card — subreddit, username, upvotes, the full look — rendered directly on your video.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🎙️</div>
+      <h3>AI Voiceover</h3>
+      <p>Natural-sounding AI voice reads the post aloud, automatically synced to the length of your video.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">✨</div>
+      <h3>AI Post Generator</h3>
+      <p>Toggle it on — the AI writes the Reddit post for you based on your transcription. Zero copy-pasting required.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">⚡</div>
+      <h3>One-Click Export</h3>
+      <p>Hit export. Download your finished video, ready to post — no rendering wait, no manual compositing.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🗂️</div>
+      <h3>Video History</h3>
+      <p>Every export is saved in your dashboard. Re-download, duplicate, or edit any past video at any time.</p>
+    </div>
+  </div>
+</section>
 
-  <!-- How it works -->
-  <section>
-    <div style="max-width:960px;margin:0 auto;">
-      <div class="demo-mockup">
-        <div class="mockup-screen">
-          <div class="mockup-bg"></div>
-          <div class="mockup-overlay">
-            <div class="reddit-header">
-              <div class="reddit-dot">r</div>
-              <div>
-                <div class="reddit-sub">r/AskReddit</div>
-                <div class="reddit-user">u/throwaway_94k · 4h</div>
-              </div>
-            </div>
-            <div class="reddit-text">What's the most unhinged thing you've done that actually worked out perfectly?</div>
-            <div class="reddit-upvotes">▲ 47.3k</div>
+<div class="section-divider"></div>
+
+<!-- How it works -->
+<section>
+  <div class="demo-mockup reveal">
+    <div class="mockup-screen">
+      <div class="mockup-bg"></div>
+      <div class="mockup-overlay">
+        <div class="reddit-header">
+          <div class="reddit-dot">r</div>
+          <div>
+            <div class="reddit-sub">r/AskReddit</div>
+            <div class="reddit-user">u/throwaway_94k · 4h</div>
           </div>
         </div>
-        <div class="mockup-info">
-          <h3>How it works</h3>
-          <ul class="mockup-steps">
-            <li><span class="step-num">1</span> Upload your background video — gameplay, IRL, anything</li>
-            <li><span class="step-num">2</span> Paste your transcription or let AI write the Reddit post</li>
-            <li><span class="step-num">3</span> Customize the overlay — voice, position, username, sub</li>
-            <li><span class="step-num">4</span> Preview your video live in the dashboard</li>
-            <li><span class="step-num">5</span> Export and post — done in under 2 minutes</li>
-          </ul>
-        </div>
+        <div class="reddit-text">What's the most unhinged thing you've done that actually worked out perfectly?</div>
+        <div class="reddit-upvotes">▲ 47.3k</div>
       </div>
     </div>
-  </section>
+    <div class="mockup-info">
+      <h3>How it works</h3>
+      <ul class="mockup-steps">
+        <li><span class="step-num">1</span> Upload your background video — gameplay, IRL, anything</li>
+        <li><span class="step-num">2</span> Paste your transcription or let AI write the Reddit post</li>
+        <li><span class="step-num">3</span> Customize the overlay — voice, position, username, sub</li>
+        <li><span class="step-num">4</span> Preview your video live in the dashboard</li>
+        <li><span class="step-num">5</span> Export and post — done in under 2 minutes</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-  <!-- Pricing -->
-  <section id="pricing">
-    <div class="section-label">Pricing</div>
-    <h2 class="section-title">Pick your plan.</h2>
-    <p class="section-sub">No hidden costs. No surprise bills. You choose how much control you want.</p>
+<!-- Pricing -->
+<section id="pricing">
+  <div class="section-label reveal">Pricing</div>
+  <h2 class="section-title reveal">Pick your plan.</h2>
+  <p class="section-sub reveal">No hidden costs. No surprise bills. You choose how much control you want.</p>
 
-    <div class="pricing-grid">
+  <div class="pricing-grid">
 
-      <!-- Yearly -->
-      <div class="pricing-card featured">
-        <div class="plan-tag">Best Value</div>
-        <div class="plan-name">Hosted — Yearly</div>
-        <div class="plan-desc">Fully managed. I handle everything — you just open the dashboard and create.</div>
-        <div class="plan-price">
-          <span class="amount">$5,000</span><span class="period">/ year</span>
-        </div>
-        <ul class="plan-features">
-          <li><span class="check">✓</span> Up to ~500 videos/month</li>
-          <li><span class="check">✓</span> All AI & hosting costs covered</li>
-          <li><span class="check">✓</span> Bug fixes & uptime monitoring</li>
-          <li><span class="check">✓</span> No API keys, no setup, nothing to manage</li>
-          <li><span class="check">✓</span> Save ~$7,000 vs monthly</li>
-        </ul>
-        <a href="#contact" class="plan-btn primary">Get Started</a>
+    <!-- Yearly -->
+    <div class="pricing-card featured reveal">
+      <div class="plan-tag">Best Value</div>
+      <div class="plan-name">Hosted — Yearly</div>
+      <div class="plan-desc">Fully managed. I handle everything — you just open the dashboard and create.</div>
+      <div class="plan-price">
+        <span class="amount">$5,000</span><span class="period">/ year</span>
       </div>
-
-      <!-- Monthly -->
-      <div class="pricing-card">
-        <div class="plan-name">Hosted — Monthly</div>
-        <div class="plan-desc">Same fully-managed experience. Pay month to month, cancel anytime.</div>
-        <div class="plan-price">
-          <span class="amount">$1,000</span><span class="period">/ month</span>
-        </div>
-        <ul class="plan-features">
-          <li><span class="check">✓</span> Up to ~500 videos/month</li>
-          <li><span class="check">✓</span> All AI & hosting costs covered</li>
-          <li><span class="check">✓</span> Cancel anytime</li>
-          <li><span class="check">✓</span> No technical setup required</li>
-        </ul>
-        <a href="#contact" class="plan-btn secondary">Get Started</a>
-      </div>
-
-      <!-- Self-hosted -->
-      <div class="pricing-card">
-        <div class="plan-name">Self-Hosted</div>
-        <div class="plan-desc">Own the code forever. You deploy it, you control it, you pay your own API bills.</div>
-        <div class="plan-price">
-          <span class="amount">$4,000</span><span class="period">one-time</span>
-        </div>
-        <ul class="plan-features">
-          <li><span class="check">✓</span> Full source code ownership</li>
-          <li><span class="check">✓</span> Plug in your own API keys</li>
-          <li><span class="check">✓</span> ~$22–$99/mo in direct API costs</li>
-          <li><span class="check">✓</span> One-time setup call included</li>
-          <li><span class="check">✓</span> No ongoing fees</li>
-        </ul>
-        <a href="#contact" class="plan-btn secondary">Get Started</a>
-      </div>
-
+      <ul class="plan-features">
+        <li><span class="check">✓</span> Up to ~500 videos/month</li>
+        <li><span class="check">✓</span> All AI & hosting costs covered</li>
+        <li><span class="check">✓</span> Bug fixes & uptime monitoring</li>
+        <li><span class="check">✓</span> No API keys, no setup, nothing to manage</li>
+        <li><span class="check">✓</span> Save ~$7,000 vs monthly</li>
+      </ul>
+      <a href="#contact" class="plan-btn primary">Get Started →</a>
     </div>
 
-    <!-- Mercury Payment Note -->
-    <div class="mercury-note">
-      <div class="mercury-icon">🏦</div>
-      <div class="mercury-text">
-        <strong>Payments secured via Mercury Business Bank</strong>
-        <p>All transactions are processed through Growmetry LLC's Mercury business bank account — a US-registered, FDIC-insured business banking platform. Your money is safe and traceable from day one.</p>
+    <!-- Monthly -->
+    <div class="pricing-card reveal">
+      <div class="plan-name">Hosted — Monthly</div>
+      <div class="plan-desc">Same fully-managed experience. Pay month to month, cancel anytime.</div>
+      <div class="plan-price">
+        <span class="amount">$1,000</span><span class="period">/ month</span>
       </div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> Up to ~500 videos/month</li>
+        <li><span class="check">✓</span> All AI & hosting costs covered</li>
+        <li><span class="check">✓</span> Cancel anytime</li>
+        <li><span class="check">✓</span> No technical setup required</li>
+      </ul>
+      <a href="#contact" class="plan-btn secondary">Get Started →</a>
     </div>
 
-    <div class="delivery-bar">
-      <div>
-        <div class="label">Delivery</div>
-        <div class="value"><span>7 days</span> from first payment</div>
+    <!-- Self-hosted -->
+    <div class="pricing-card reveal">
+      <div class="plan-name">Self-Hosted</div>
+      <div class="plan-desc">Own the code forever. You deploy it, you control it, you pay your own API bills.</div>
+      <div class="plan-price">
+        <span class="amount">$4,000</span><span class="period">one-time</span>
       </div>
-      <div>
-        <div class="label">Payment</div>
-        <div class="value">50% upfront · 50% on delivery</div>
-      </div>
-      <div>
-        <div class="label">Includes</div>
-        <div class="value">Full dashboard + all integrations</div>
-      </div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> Full source code ownership</li>
+        <li><span class="check">✓</span> Plug in your own API keys</li>
+        <li><span class="check">✓</span> ~$22–$99/mo in direct API costs</li>
+        <li><span class="check">✓</span> One-time setup call included</li>
+        <li><span class="check">✓</span> No ongoing fees</li>
+      </ul>
+      <a href="#contact" class="plan-btn secondary">Get Started →</a>
     </div>
-  </section>
 
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-company">Growmetry<span>, LLC</span></div>
-      <div class="footer-address">30 N Gould St, Ste R, Sheridan, Wyoming 82801, United States</div>
-      <div class="footer-reg">Wyoming Registration #133321 · Owner: Abdelrahman Ahmed · Payments via Mercury Business Bank</div>
+  </div>
+
+  <!-- Mercury -->
+  <div class="mercury-note reveal">
+    <div class="mercury-icon">🏦</div>
+    <div class="mercury-text">
+      <strong>Payments secured via Mercury Business Bank</strong>
+      <p>All transactions are processed through Growmetry LLC's Mercury business bank account — a US-registered, FDIC-insured business banking platform. Your money is safe and traceable from day one.</p>
     </div>
-  </footer>
+  </div>
+
+  <!-- Delivery -->
+  <div class="delivery-bar reveal">
+    <div>
+      <div class="label">Delivery</div>
+      <div class="value"><span>7 days</span> from first payment</div>
+    </div>
+    <div>
+      <div class="label">Payment</div>
+      <div class="value">50% upfront · 50% on delivery</div>
+    </div>
+    <div>
+      <div class="label">Includes</div>
+      <div class="value">Full dashboard + all integrations</div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">G</div>
+    <div class="footer-company">Growmetry<span>, LLC</span></div>
+    <div class="footer-address">30 N Gould St, Ste R, Sheridan, Wyoming 82801, United States</div>
+    <div class="footer-reg">Wyoming · Filing ID: 2026-001908151 · Owner: Abdelrahman Ahmed · Payments via Mercury Business Bank · <a href="https://wyobiz.wyo.gov/business/FilingDetails.aspx?eFNum=208154227136168070204178062219040200156114012101" target="_blank" rel="noopener" style="color:#475569;text-decoration:none;">Verify Registration →</a></div>
+  </div>
+</footer>
+
+<script>
+  /* ── Particles ── */
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H, dots = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function initDots() {
+    dots = [];
+    const count = Math.floor(W * H / 14000);
+    for (let i = 0; i < count; i++) {
+      dots.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.5 + 0.3,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        alpha: Math.random() * 0.4 + 0.1
+      });
+    }
+  }
+
+  function drawDots() {
+    ctx.clearRect(0, 0, W, H);
+    dots.forEach(d => {
+      d.x += d.vx; d.y += d.vy;
+      if (d.x < 0) d.x = W;
+      if (d.x > W) d.x = 0;
+      if (d.y < 0) d.y = H;
+      if (d.y > H) d.y = 0;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,100,50,${d.alpha})`;
+      ctx.fill();
+    });
+
+    // Draw lines between nearby dots
+    for (let i = 0; i < dots.length; i++) {
+      for (let j = i + 1; j < dots.length; j++) {
+        const dx = dots[i].x - dots[j].x;
+        const dy = dots[i].y - dots[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.moveTo(dots[i].x, dots[i].y);
+          ctx.lineTo(dots[j].x, dots[j].y);
+          ctx.strokeStyle = `rgba(255,69,0,${0.08 * (1 - dist/100)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(drawDots);
+  }
+
+  resize();
+  initDots();
+  drawDots();
+  window.addEventListener('resize', () => { resize(); initDots(); });
+
+  /* ── Scroll reveal ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ── Animated upvote count ── */
+  let upvote = 47300;
+  setInterval(() => {
+    upvote += Math.floor(Math.random() * 8) + 1;
+    const el = document.querySelector('.reddit-upvotes');
+    if (el) el.innerHTML = `▲ ${(upvote/1000).toFixed(1)}k`;
+  }, 2200);
+</script>
 
 </body>
 </html>
